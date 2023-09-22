@@ -68,6 +68,12 @@ public class Vendedor implements Serializable {
     }
 
     public int calcularIdade() {
-        return LocalDate.now().getYear() - dataNascimento.getYear();
+
+        if (LocalDate.now().getDayOfYear() >= dataNascimento.getDayOfYear()) {
+            return LocalDate.now().getYear() - dataNascimento.getYear();
+        } else {
+            return LocalDate.now().getYear() - dataNascimento.getYear() - 1;
+        }
+
     }
 }
