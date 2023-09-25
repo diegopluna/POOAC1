@@ -1,3 +1,3 @@
 # POOAC1
 Integrantes:
-João Pedro Araújo Nóbrega, João Pedro Batista, Diego Peter luna, Arthur wolmer, Mathews Ivo, Pedro Leite. 
+Arthur Wolmer, Diego Peter Luna, João Pedro Araújo Nóbrega, João Pedro Batista, Mathews Ivo, Pedro Leite. 
