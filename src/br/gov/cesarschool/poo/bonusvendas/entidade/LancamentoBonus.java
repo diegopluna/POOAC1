@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 
 public class LancamentoBonus implements Serializable {
     private long numeroCaixaDeBonus;
-    private int valor;
+    private double valor;
     private LocalDateTime dataHoraLancamento;
 
-    public LancamentoBonus(long numeroCaixaDeBonus, int valor, LocalDateTime dataHoraLancamento) {
+    public LancamentoBonus(long numeroCaixaDeBonus, double valor, LocalDateTime dataHoraLancamento) {
         this.numeroCaixaDeBonus = numeroCaixaDeBonus;
         this.valor = valor;
         this.dataHoraLancamento = dataHoraLancamento;
@@ -18,7 +18,7 @@ public class LancamentoBonus implements Serializable {
         return numeroCaixaDeBonus;
     }
 
-    public int getValor() {
+    public double getValor() {
         return valor;
     }
 

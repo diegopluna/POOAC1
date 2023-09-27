@@ -2,9 +2,7 @@ package br.gov.cesarschool.poo.bonusvendas.negocio;
 
 import br.gov.cesarschool.poo.bonusvendas.dao.CaixaDeBonusDAO;
 import br.gov.cesarschool.poo.bonusvendas.dao.LancamentoBonusDAO;
-import br.gov.cesarschool.poo.bonusvendas.entidade.CaixaDeBonus;
-import br.gov.cesarschool.poo.bonusvendas.entidade.LancamentoBonusCredito;
-import br.gov.cesarschool.poo.bonusvendas.entidade.Vendedor;
+import br.gov.cesarschool.poo.bonusvendas.entidade.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,15 +37,34 @@ public class AcumuloResgateMediator {
 
     public String acumularBonus(long numeroCaixaDeBonus, double valor) {
         if (valor <= 0) {
-            return "Bônus tem que ser um número positivo";
+            return "Valor menor ou igual a zero";
         }
         CaixaDeBonus caixa = repositorioCaixaDeBonus.buscar(numeroCaixaDeBonus);
         if (caixa == null) {
-            return "Caixa de bônus não existe";
+            return "Caixa de bonus inexistente";
         }
         caixa.creditar(valor);
         this.repositorioCaixaDeBonus.alterar(caixa);
-        this.repositorioLancamento.incluir( new LancamentoBonusCredito(numeroCaixaDeBonus, (int) valor, LocalDateTime.now()));
+        this.repositorioLancamento.incluir( new LancamentoBonusCredito(numeroCaixaDeBonus, valor, LocalDateTime.now()));
         return null;
     }
+
+    public String resgatar(long numeroCaixaDeBonus, double valor, TipoResgate tipo) {
+        if (valor <= 0) {
+            return "Valor menor ou igual a zero";
+        }
+        CaixaDeBonus caixa = repositorioCaixaDeBonus.buscar(numeroCaixaDeBonus);
+        if (caixa == null) {
+            return "Caixa de bonus inexistente";
+        }
+        if (valor > caixa.getSaldo()) {
+            return "Saldo insuficiente";
+        }
+        caixa.debitar(valor);
+        this.repositorioCaixaDeBonus.alterar(caixa);
+        this.repositorioLancamento.incluir( new LancamentoBonusResgate(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo));
+        return null;
+    }
+
+
 }
