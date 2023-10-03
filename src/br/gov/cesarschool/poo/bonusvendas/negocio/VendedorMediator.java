@@ -15,11 +15,11 @@ public class VendedorMediator {
     private AcumuloResgateMediator caixaDeBonusMediator;
 
     private VendedorMediator() {
-        this.caixaDeBonusMediator = AcumuloResgateMediator.getInstance();
+        this.caixaDeBonusMediator = AcumuloResgateMediator.getInstancia();
         this.repositorioVendedor = new VendedorDAO();
     }
 
-    public static VendedorMediator getInstance() {
+    public static VendedorMediator getInstancia() {
         if (instance == null) {
             instance = new VendedorMediator();
         }
@@ -67,7 +67,7 @@ public class VendedorMediator {
         }
         if (vendedor.getDataNascimento() == null) {
             return "Data de nascimento nao informada";
-        } else if (Period.between(LocalDate.now(), vendedor.getDataNascimento()).getYears() >= 18) {
+        } else if (Period.between(vendedor.getDataNascimento(), LocalDate.now()).getYears() < 18) {
             return "Data de nascimento invalida";
         }
         if (vendedor.getRenda() < 0) {

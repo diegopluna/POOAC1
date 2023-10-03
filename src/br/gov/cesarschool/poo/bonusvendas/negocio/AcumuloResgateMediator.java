@@ -20,7 +20,7 @@ public class AcumuloResgateMediator {
         this.repositorioCaixaDeBonus = new CaixaDeBonusDAO();
     }
 
-    public static AcumuloResgateMediator getInstance() {
+    public static AcumuloResgateMediator getInstancia() {
         if (instance == null) {
             instance = new AcumuloResgateMediator();
         }
@@ -28,7 +28,7 @@ public class AcumuloResgateMediator {
     }
 
     public long gerarCaixaDeBonus(Vendedor vendedor) {
-        long numero = Long.parseLong(vendedor.getCpf() + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        long numero = Long.parseLong(vendedor.getCpf().substring(0, vendedor.getCpf().length() - 2) + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         if (this.repositorioCaixaDeBonus.incluir(new CaixaDeBonus(numero))) {
             return numero;
         }
@@ -65,6 +65,4 @@ public class AcumuloResgateMediator {
         this.repositorioLancamento.incluir( new LancamentoBonusResgate(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo));
         return null;
     }
-
-
 }

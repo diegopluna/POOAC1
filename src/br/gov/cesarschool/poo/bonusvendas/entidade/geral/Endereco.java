@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class Endereco implements Serializable {
     private String logradouro;
     private int numero;
-    private int complemento;
+    private String complemento;
     private String cep;
     private String cidade;
     private String estado;
     private String pais;
 
-    public Endereco(String logradouro, int numero, int complemento, String cep, String cidade, String estado, String pais) {
+    public Endereco(String logradouro, int numero, String complemento, String cep, String cidade, String estado, String pais) {
         this.logradouro = logradouro;
         this.numero = numero;
         this.complemento = complemento;
@@ -37,11 +37,11 @@ public class Endereco implements Serializable {
         this.numero = numero;
     }
 
-    public int getComplemento() {
+    public String getComplemento() {
         return complemento;
     }
 
-    public void setComplemento(int complemento) {
+    public void setComplemento(String complemento) {
         this.complemento = complemento;
     }
 

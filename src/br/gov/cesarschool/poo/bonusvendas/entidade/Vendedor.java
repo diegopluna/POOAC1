@@ -5,6 +5,7 @@ import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Sexo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Vendedor implements Serializable {
     private String cpf;
