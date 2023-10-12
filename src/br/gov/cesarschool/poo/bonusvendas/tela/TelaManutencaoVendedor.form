@@ -114,7 +114,7 @@
           <text value="Número:"/>
         </properties>
       </component>
-      <component id="53d24" class="javax.swing.JTextField" binding="txtNumero">
+      <component id="1122" class="javax.swing.JFormattedTextField" binding="txtNumero">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -192,12 +192,12 @@
           <text value="Feminino"/>
         </properties>
       </component>
-      <component id="49e1e" class="javax.swing.JButton" binding="button1" default-binding="true">
+      <component id="49e1e" class="javax.swing.JButton" binding="includeBtn">
         <constraints>
           <grid row="11" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Button"/>
+          <text value="Adicionar"/>
         </properties>
       </component>
     </children>

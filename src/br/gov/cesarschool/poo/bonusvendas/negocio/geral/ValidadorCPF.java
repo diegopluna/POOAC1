@@ -22,5 +22,4 @@ public class ValidadorCPF {
         int resto = (soma * 10) % 11;
         return resto == digitoVerificador;
     }
-
 }
