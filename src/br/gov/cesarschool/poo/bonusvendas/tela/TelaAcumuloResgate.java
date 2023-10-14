@@ -7,6 +7,8 @@ import br.gov.cesarschool.poo.bonusvendas.negocio.AcumuloResgateMediator;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TelaAcumuloResgate extends JFrame {
     private JFormattedTextField txtNumero;
@@ -30,6 +32,20 @@ public class TelaAcumuloResgate extends JFrame {
         for (String tipo: tiposResgates) {
             comboTipo.addItem(tipo);
         }
+
+        txtNumero.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if(!((c >= '0') && (c <= '9') ||
+                        (c == KeyEvent.VK_BACK_SPACE) ||
+                        (c == KeyEvent.VK_DELETE)) ||
+                        (txtNumero.getText().length() >= 18)){
+                    e.consume();
+                }
+            }
+        });
+
         btnBuscar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
