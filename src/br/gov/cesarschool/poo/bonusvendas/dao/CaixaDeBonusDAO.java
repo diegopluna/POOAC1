@@ -2,36 +2,55 @@ package br.gov.cesarschool.poo.bonusvendas.dao;
 
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 import br.gov.cesarschool.poo.bonusvendas.entidade.CaixaDeBonus;
-import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Registro;
-import br.gov.cesarschool.poo.bonusvendas.negocio.geral.StringUtil;
 
 import java.io.Serializable;
 
 public class CaixaDeBonusDAO {
-
-    private DAOGenerico dao;
-
-    public CaixaDeBonusDAO() {
-        this.dao = new DAOGenerico(CaixaDeBonus.class);
-    }
+    private static final String BRANCO = "";
+    private CadastroObjetos cadastro = new CadastroObjetos(CaixaDeBonus.class);
 
     public boolean incluir(CaixaDeBonus caixa) {
-        return incluir(caixa);
+        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
+
+        if (caixaBusca != null) {
+            return false;
+        } else {
+            cadastro.incluir(caixa, BRANCO + caixa.getNumero());
+            return true;
+        }
     }
 
     public boolean alterar(CaixaDeBonus caixa) {
-        return alterar(caixa);
+        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
+
+        if (caixaBusca == null) {
+            return false;
+        } else {
+            cadastro.alterar(caixa, BRANCO + caixa.getNumero());
+            return true;
+        }
+    }
+
+    public boolean excluir(CaixaDeBonus caixa) {
+        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
+
+        if (caixaBusca == null) {
+            return false;
+        } else {
+            cadastro.excluir(BRANCO + caixa.getNumero());
+            return true;
+        }
     }
 
     public CaixaDeBonus buscar(long numero) {
-        return (CaixaDeBonus) dao.buscar(String.valueOf(numero));
+        return (CaixaDeBonus) cadastro.buscar(BRANCO + numero);
     }
 
     public CaixaDeBonus[] buscarTodos() {
-        Registro[] registros = dao.buscarTodos();
-        CaixaDeBonus[] caixas = new CaixaDeBonus[registros.length];
-        for (int i = 0; i < registros.length; i++) {
-            caixas[i] = (CaixaDeBonus) registros[i];
+        Serializable[] rets = cadastro.buscarTodos(CaixaDeBonus.class);
+        CaixaDeBonus[] caixas = new CaixaDeBonus[rets.length];
+        for (int i = 0; i < rets.length; i++) {
+            caixas[i] = (CaixaDeBonus) rets[i];
         }
         return caixas;
     }
