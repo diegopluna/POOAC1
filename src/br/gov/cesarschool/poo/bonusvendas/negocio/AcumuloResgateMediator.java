@@ -66,7 +66,7 @@ public class AcumuloResgateMediator {
         }
         caixa.debitar(valor);
         this.repositorioCaixaDeBonus.alterar(caixa);
-        this.repositorioLancamento.incluir( new LancamentoBonusResgate(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo));
+        this.repositorioLancamento.incluir( new LancamentoBonusDebito(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo));
         return null;
     }
 }

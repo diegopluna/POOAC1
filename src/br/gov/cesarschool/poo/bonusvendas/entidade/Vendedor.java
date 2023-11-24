@@ -1,13 +1,14 @@
 package br.gov.cesarschool.poo.bonusvendas.entidade;
 
 import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Endereco;
+import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Registro;
 import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Sexo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Vendedor implements Serializable {
+public class Vendedor extends Registro {
     private String cpf;
     private String nomeCompleto;
     private Sexo sexo;
@@ -22,6 +23,10 @@ public class Vendedor implements Serializable {
         this.dataNascimento = dataNascimento;
         this.renda = renda;
         this.endereco = endereco;
+    }
+
+    public String getIdUnico() {
+        return cpf;
     }
 
     public String getCpf() {
