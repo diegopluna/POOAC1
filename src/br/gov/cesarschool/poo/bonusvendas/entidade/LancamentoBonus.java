@@ -9,6 +9,7 @@ public class LancamentoBonus implements Serializable {
     private LocalDateTime dataHoraLancamento;
 
     public LancamentoBonus(long numeroCaixaDeBonus, double valor, LocalDateTime dataHoraLancamento) {
+        super();
         this.numeroCaixaDeBonus = numeroCaixaDeBonus;
         this.valor = valor;
         this.dataHoraLancamento = dataHoraLancamento;

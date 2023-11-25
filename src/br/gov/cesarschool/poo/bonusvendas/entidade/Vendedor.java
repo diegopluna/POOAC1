@@ -5,7 +5,7 @@ import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Sexo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 public class Vendedor implements Serializable {
     private String cpf;
@@ -16,6 +16,7 @@ public class Vendedor implements Serializable {
     private Endereco endereco;
 
     public Vendedor(String cpf, String nomeCompleto, Sexo sexo, LocalDate dataNascimento, double renda, Endereco endereco) {
+        super();
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
         this.sexo = sexo;
@@ -69,12 +70,6 @@ public class Vendedor implements Serializable {
     }
 
     public int calcularIdade() {
-
-        if (LocalDate.now().getDayOfYear() >= dataNascimento.getDayOfYear()) {
-            return LocalDate.now().getYear() - dataNascimento.getYear();
-        } else {
-            return LocalDate.now().getYear() - dataNascimento.getYear() - 1;
-        }
-
+        return (int) ChronoUnit.YEARS.between(dataNascimento, LocalDate.now());
     }
 }

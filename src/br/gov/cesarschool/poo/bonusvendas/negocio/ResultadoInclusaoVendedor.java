@@ -5,6 +5,7 @@ public class ResultadoInclusaoVendedor {
     private String mensagemErroValidacao;
 
     public ResultadoInclusaoVendedor(long numeroCaixaDeBonus, String mensagemErroValidacao) {
+        super();
         this.numeroCaixaDeBonus = numeroCaixaDeBonus;
         this.mensagemErroValidacao = mensagemErroValidacao;
     }

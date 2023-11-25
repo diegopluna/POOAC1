@@ -9,50 +9,35 @@ public class CaixaDeBonusDAO {
     private static final String BRANCO = "";
     private CadastroObjetos cadastro = new CadastroObjetos(CaixaDeBonus.class);
 
-    public boolean incluir(CaixaDeBonus caixa) {
-        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
+    public boolean incluir(CaixaDeBonus caixaBonus) {
+        CaixaDeBonus caixaBonusBusca = buscar(caixaBonus.getNumero());
 
-        if (caixaBusca != null) {
+        if (caixaBonusBusca != null) {
             return false;
         } else {
-            cadastro.incluir(caixa, BRANCO + caixa.getNumero());
+            cadastro.incluir(caixaBonus, BRANCO + caixaBonus.getNumero());
             return true;
         }
     }
+    public boolean alterar(CaixaDeBonus caixaBonus) {
+        CaixaDeBonus caixaBonusBusca = buscar(caixaBonus.getNumero());
 
-    public boolean alterar(CaixaDeBonus caixa) {
-        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
-
-        if (caixaBusca == null) {
+        if (caixaBonusBusca == null) {
             return false;
         } else {
-            cadastro.alterar(caixa, BRANCO + caixa.getNumero());
+            cadastro.alterar(caixaBonus, BRANCO + caixaBonus.getNumero());
             return true;
         }
     }
-
-    public boolean excluir(CaixaDeBonus caixa) {
-        CaixaDeBonus caixaBusca = buscar(caixa.getNumero());
-
-        if (caixaBusca == null) {
-            return false;
-        } else {
-            cadastro.excluir(BRANCO + caixa.getNumero());
-            return true;
-        }
+    public CaixaDeBonus buscar(long codigo) {
+        return (CaixaDeBonus)cadastro.buscar(BRANCO + codigo);
     }
-
-    public CaixaDeBonus buscar(long numero) {
-        return (CaixaDeBonus) cadastro.buscar(BRANCO + numero);
-    }
-
     public CaixaDeBonus[] buscarTodos() {
         Serializable[] rets = cadastro.buscarTodos(CaixaDeBonus.class);
-        CaixaDeBonus[] caixas = new CaixaDeBonus[rets.length];
-        for (int i = 0; i < rets.length; i++) {
-            caixas[i] = (CaixaDeBonus) rets[i];
+        CaixaDeBonus[] caixaBonus = new CaixaDeBonus[rets.length];
+        for (int i = 0; i<rets.length; i++) {
+            caixaBonus[i] = (CaixaDeBonus)rets[i];
         }
-        return caixas;
+        return caixaBonus;
     }
-
 }

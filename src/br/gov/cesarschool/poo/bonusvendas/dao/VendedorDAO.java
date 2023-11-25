@@ -6,7 +6,6 @@ import br.gov.cesarschool.poo.bonusvendas.entidade.Vendedor;
 import java.io.Serializable;
 
 public class VendedorDAO {
-    private static final String BRANCO = "";
     private CadastroObjetos cadastro = new CadastroObjetos(Vendedor.class);
 
     public boolean incluir(Vendedor vend) {
@@ -15,7 +14,7 @@ public class VendedorDAO {
         if (vendBusca != null) {
             return false;
         } else {
-            cadastro.incluir(vend, BRANCO + vend.getCpf());
+            cadastro.incluir(vend, vend.getCpf());
             return true;
         }
     }
@@ -26,24 +25,13 @@ public class VendedorDAO {
         if (vendBusca == null) {
             return false;
         } else {
-            cadastro.alterar(vend, BRANCO + vend.getCpf());
-            return true;
-        }
-    }
-
-    public boolean excluir(Vendedor vend) {
-        Vendedor vendBusca = buscar(vend.getCpf());
-
-        if (vendBusca == null) {
-            return false;
-        } else {
-            cadastro.excluir(BRANCO + vend.getCpf());
+            cadastro.alterar(vend, vend.getCpf());
             return true;
         }
     }
 
     public Vendedor buscar(String cpf) {
-        return (Vendedor)cadastro.buscar(BRANCO + cpf);
+        return (Vendedor)cadastro.buscar(cpf);
     }
 
     public Vendedor[] buscarTodos() {

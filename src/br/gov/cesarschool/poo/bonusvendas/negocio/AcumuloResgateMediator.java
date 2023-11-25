@@ -9,64 +9,70 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class AcumuloResgateMediator {
-    private static AcumuloResgateMediator instance;
+    private static final String CAIXA_DE_BONUS_INEXISTENTE = "Caixa de bonus inexistente";
+    private static final String VALOR_MENOR_OU_IGUAL_A_ZERO = "Valor menor ou igual a zero";
+    private static AcumuloResgateMediator instancia;
+    public static AcumuloResgateMediator getInstancia() {
+        if (instancia == null) {
+            instancia = new AcumuloResgateMediator();
+        }
+        return instancia;
+    }
+
     private CaixaDeBonusDAO repositorioCaixaDeBonus;
     private LancamentoBonusDAO repositorioLancamento;
-
-
 
     private AcumuloResgateMediator() {
         this.repositorioLancamento = new LancamentoBonusDAO();
         this.repositorioCaixaDeBonus = new CaixaDeBonusDAO();
     }
-
-    public static AcumuloResgateMediator getInstancia() {
-        if (instance == null) {
-            instance = new AcumuloResgateMediator();
-        }
-        return instance;
-    }
-
-    public CaixaDeBonusDAO getRepositorioCaixaDeBonus() {
-        return repositorioCaixaDeBonus;
-    }
-
     public long gerarCaixaDeBonus(Vendedor vendedor) {
-        long numero = Long.parseLong(vendedor.getCpf().substring(0, vendedor.getCpf().length() - 2) + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        if (this.repositorioCaixaDeBonus.incluir(new CaixaDeBonus(numero))) {
+        LocalDate dataAtual = LocalDate.now();
+        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        long numero = Long.parseLong(vendedor.getCpf().substring(0, 9) + dataAtual.format(customFormatter));
+        CaixaDeBonus caixa = new CaixaDeBonus(numero);
+        boolean ret = repositorioCaixaDeBonus.incluir(caixa);
+        if (ret) {
             return numero;
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     public String acumularBonus(long numeroCaixaDeBonus, double valor) {
         if (valor <= 0) {
-            return "Valor menor ou igual a zero";
+            return VALOR_MENOR_OU_IGUAL_A_ZERO;
         }
         CaixaDeBonus caixa = repositorioCaixaDeBonus.buscar(numeroCaixaDeBonus);
         if (caixa == null) {
-            return "Caixa de bonus inexistente";
+            return CAIXA_DE_BONUS_INEXISTENTE;
         }
         caixa.creditar(valor);
-        this.repositorioCaixaDeBonus.alterar(caixa);
-        this.repositorioLancamento.incluir( new LancamentoBonusCredito(numeroCaixaDeBonus, valor, LocalDateTime.now()));
+        repositorioCaixaDeBonus.alterar(caixa);
+        LancamentoBonusCredito lancamento = new LancamentoBonusCredito(numeroCaixaDeBonus, valor, LocalDateTime.now());
+        repositorioLancamento.incluir( lancamento );
         return null;
     }
 
     public String resgatar(long numeroCaixaDeBonus, double valor, TipoResgate tipo) {
         if (valor <= 0) {
-            return "Valor menor ou igual a zero";
+            return VALOR_MENOR_OU_IGUAL_A_ZERO;
         }
         CaixaDeBonus caixa = repositorioCaixaDeBonus.buscar(numeroCaixaDeBonus);
         if (caixa == null) {
-            return "Caixa de bonus inexistente";
+            return CAIXA_DE_BONUS_INEXISTENTE;
         }
-        if (valor > caixa.getSaldo()) {
+        if (caixa.getSaldo() < valor) {
             return "Saldo insuficiente";
         }
         caixa.debitar(valor);
-        this.repositorioCaixaDeBonus.alterar(caixa);
-        this.repositorioLancamento.incluir( new LancamentoBonusResgate(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo));
+        repositorioCaixaDeBonus.alterar(caixa);
+        LancamentoBonusDebito lancamento = new LancamentoBonusDebito(numeroCaixaDeBonus, valor, LocalDateTime.now(), tipo);
+        repositorioLancamento.incluir(lancamento);
         return null;
+    }
+
+    public CaixaDeBonusDAO getRepositorioCaixaDeBonus() {
+        return repositorioCaixaDeBonus;
     }
 }

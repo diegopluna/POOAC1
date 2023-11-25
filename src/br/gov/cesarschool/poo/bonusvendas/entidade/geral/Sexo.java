@@ -1,14 +1,34 @@
 package br.gov.cesarschool.poo.bonusvendas.entidade.geral;
 
-public enum Sexo {
-    MASCULINO(1, "Masculino"),
-    FEMININO(2, "Feminino");
+import java.io.Serializable;
 
-    int codigo;
-    String descricao;
+public enum Sexo implements Serializable {
+    FEMININO(1, "Feminino"),
+    MASCULINO(2, "Masculino");
 
-    Sexo(int codigo, String descricao) {
+
+    private int codigo;
+    private String nome;
+
+    private Sexo(int codigo, String nome) {
         this.codigo = codigo;
-        this.descricao = descricao;
+        this.nome = nome;
+    }
+
+    public int getCodigo(){
+        return codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public static Sexo obterSexo(int codigo) {
+        for (Sexo sexo : Sexo.values()) {
+            if (sexo.codigo == codigo) {
+                return sexo;
+            }
+        }
+        return null;
     }
 }

@@ -7,49 +7,50 @@ import br.gov.cesarschool.poo.bonusvendas.negocio.geral.ValidadorCPF;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 public class VendedorMediator {
-    private static VendedorMediator instance;
+    private static VendedorMediator instancia;
+    public static VendedorMediator getInstancia() {
+        if (instancia == null) {
+            instancia = new VendedorMediator();
+        }
+        return instancia;
+    }
 
     private VendedorDAO repositorioVendedor;
     private AcumuloResgateMediator caixaDeBonusMediator;
-
     private VendedorMediator() {
-        this.caixaDeBonusMediator = AcumuloResgateMediator.getInstancia();
-        this.repositorioVendedor = new VendedorDAO();
-    }
-
-    public static VendedorMediator getInstancia() {
-        if (instance == null) {
-            instance = new VendedorMediator();
-        }
-        return instance;
+        caixaDeBonusMediator = AcumuloResgateMediator.getInstancia();
+        repositorioVendedor = new VendedorDAO();
     }
 
     public ResultadoInclusaoVendedor incluir(Vendedor vendedor) {
-        String validacao = validar(vendedor);
-        if (validacao != null) {
-            return new ResultadoInclusaoVendedor(0, validacao);
+        long numeroCaixaBonus = 0;
+        String msg = validar(vendedor);
+        if (msg == null) {
+            boolean ret = repositorioVendedor.incluir(vendedor);
+            if (!ret) {
+                msg = "Vendedor ja existente";
+            } else {
+                numeroCaixaBonus = caixaDeBonusMediator.gerarCaixaDeBonus(vendedor);
+                if (numeroCaixaBonus == 0) {
+                    msg = "Caixa de bonus nao foi gerada";
+                }
+            }
         }
-        if (!this.repositorioVendedor.incluir(vendedor)) {
-            return new ResultadoInclusaoVendedor(0, "Vendedor ja existente");
-        }
-        long numero = caixaDeBonusMediator.gerarCaixaDeBonus(vendedor);
-        if (numero == 0) {
-            return new ResultadoInclusaoVendedor(numero, "Caixa de bonus nao foi gerada");
-        }
-        return new ResultadoInclusaoVendedor(numero, null);
+        return new ResultadoInclusaoVendedor(numeroCaixaBonus, msg);
     }
 
     public String alterar(Vendedor vendedor) {
-        String validacao = validar(vendedor);
-        if (validacao != null) {
-            return validacao;
+        String msg = validar(vendedor);
+        if (msg == null) {
+            boolean ret = repositorioVendedor.alterar(vendedor);
+            if (!ret) {
+                msg = "Vendedor inexistente";
+            }
         }
-        if (!this.repositorioVendedor.alterar(vendedor)) {
-            return "Vendedor inexistente";
-        }
-        return null;
+        return msg;
     }
 
     private String validar(Vendedor vendedor) {
@@ -67,7 +68,8 @@ public class VendedorMediator {
         }
         if (vendedor.getDataNascimento() == null) {
             return "Data de nascimento nao informada";
-        } else if (Period.between(vendedor.getDataNascimento(), LocalDate.now()).getYears() < 18) {
+        }
+        if (dataNascimentoInvalida(vendedor.getDataNascimento())) {
             return "Data de nascimento invalida";
         }
         if (vendedor.getRenda() < 0) {
@@ -75,22 +77,33 @@ public class VendedorMediator {
         }
         if (vendedor.getEndereco() == null) {
             return "Endereco nao informado";
-        } else if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getLogradouro())) {
+        }
+        if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getLogradouro())) {
             return "Logradouro nao informado";
-        } else if (vendedor.getEndereco().getLogradouro().length() < 4) {
+        }
+        if (vendedor.getEndereco().getLogradouro().length() < 4) {
             return "Logradouro tem menos de 04 caracteres";
-        } else if (vendedor.getEndereco().getNumero() < 0) {
+        }
+        if (vendedor.getEndereco().getNumero() < 0) {
             return "Numero menor que zero";
-        } else if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getCidade())) {
+        }
+        if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getCidade())) {
             return "Cidade nao informada";
-        } else if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getEstado())) {
+        }
+        if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getEstado())) {
             return "Estado nao informado";
-        } else if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getPais())) {
+        }
+        if (StringUtil.ehNuloOuBranco(vendedor.getEndereco().getPais())) {
             return "Pais nao informado";
         }
 
         return null;
 
+    }
+
+    private boolean dataNascimentoInvalida(LocalDate dataNasc) {
+        long yearsDifference = ChronoUnit.YEARS.between(dataNasc, LocalDate.now());
+        return yearsDifference < 17;
     }
 
 

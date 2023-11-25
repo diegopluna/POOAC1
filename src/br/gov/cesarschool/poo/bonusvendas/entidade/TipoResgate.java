@@ -6,11 +6,25 @@ public enum TipoResgate {
     CASH(3, "Cash");
 
     int codigo;
-    String descricao;
+    String nome;
 
-    TipoResgate(int codigo, String descricao) {
+    TipoResgate(int codigo, String nome) {
         this.codigo = codigo;
-        this.descricao = descricao;
+        this.nome = nome;
+    }
+    public int getCodigo() {
+        return codigo;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public static TipoResgate obterTipo(int codigo) {
+        for (TipoResgate tipoResgate : TipoResgate.values()) {
+            if (tipoResgate.codigo == codigo) {
+                return tipoResgate;
+            }
+        }
+        return null;
     }
 
 }

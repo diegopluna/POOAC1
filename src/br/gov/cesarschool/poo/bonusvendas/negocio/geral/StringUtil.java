@@ -5,6 +5,6 @@ public class StringUtil {
     }
 
     public static boolean ehNuloOuBranco(String str) {
-        return str == null || str.trim().isEmpty();
+        return str == null || str.trim().equals("");
     }
 }
