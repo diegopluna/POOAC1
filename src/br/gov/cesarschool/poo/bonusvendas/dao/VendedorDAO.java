@@ -1,47 +1,35 @@
 package br.gov.cesarschool.poo.bonusvendas.dao;
 
-import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 import br.gov.cesarschool.poo.bonusvendas.entidade.Vendedor;
+import br.gov.cesarschool.poo.bonusvendas.entidade.geral.Registro;
 
-import java.io.Serializable;
 
 public class VendedorDAO {
-    private CadastroObjetos cadastro = new CadastroObjetos(Vendedor.class);
+
+    private DAOGenerico dao;
+
+    public VendedorDAO() {
+        this.dao = new DAOGenerico(Vendedor.class);
+    }
 
     public boolean incluir(Vendedor vend) {
-        Vendedor vendBusca = buscar(vend.getCpf());
-
-        if (vendBusca != null) {
-            return false;
-        } else {
-            cadastro.incluir(vend, vend.getCpf());
-            return true;
-        }
+        return dao.incluir(vend);
     }
 
     public boolean alterar(Vendedor vend) {
-        Vendedor vendBusca = buscar(vend.getCpf());
-
-        if (vendBusca == null) {
-            return false;
-        } else {
-            cadastro.alterar(vend, vend.getCpf());
-            return true;
-        }
+        return dao.alterar(vend);
     }
 
     public Vendedor buscar(String cpf) {
-        return (Vendedor)cadastro.buscar(cpf);
+        return (Vendedor)dao.buscar(cpf);
     }
 
     public Vendedor[] buscarTodos() {
-        Serializable[] rets = cadastro.buscarTodos(Vendedor.class);
-        Vendedor[] vends = new Vendedor[rets.length];
-        for (int i = 0; i < rets.length; i++) {
-            vends[i] = (Vendedor)rets[i];
+        Registro[] regs = dao.buscarTodos();
+        Vendedor[] vends = new Vendedor[regs.length];
+        for (int i = 0; i < regs.length; i++) {
+            vends[i] = (Vendedor)regs[i];
         }
         return vends;
     }
-
-
 }
