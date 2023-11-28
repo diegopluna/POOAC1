@@ -3,10 +3,14 @@ package br.gov.cesarschool.poo.bonusvendas.negocio;
 import br.gov.cesarschool.poo.bonusvendas.dao.CaixaDeBonusDAO;
 import br.gov.cesarschool.poo.bonusvendas.dao.LancamentoBonusDAO;
 import br.gov.cesarschool.poo.bonusvendas.entidade.*;
+import br.gov.cesarschool.poo.bonusvendas.util.Ordenadora;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AcumuloResgateMediator {
     private static final String CAIXA_DE_BONUS_INEXISTENTE = "Caixa de bonus inexistente";
@@ -74,5 +78,39 @@ public class AcumuloResgateMediator {
 
     public CaixaDeBonusDAO getRepositorioCaixaDeBonus() {
         return repositorioCaixaDeBonus;
+    }
+
+    public CaixaDeBonus[] listaCaixaDeBonusPorSaldoMaior(double saldoInicial) {
+        CaixaDeBonus[] caixas = repositorioCaixaDeBonus.buscarTodos();
+        Ordenadora.ordenar(caixas, ComparadorCaixaDeBonusSaldoDec.getInstance());
+        int count = 0;
+        for (int i = 0; i < caixas.length; i++) {
+            if (caixas[i].getSaldo() >= saldoInicial) {
+                count++;
+            }
+        }
+        CaixaDeBonus[] retorno = new CaixaDeBonus[count];
+        for (int i = 0; i < count; i++) {
+            retorno[i] = caixas[i];
+        }
+        return retorno;
+    }
+
+    public LancamentoBonus[] listaLancamentosPorFaixaData(LocalDate d1, LocalDate d2) {
+        LancamentoBonus[] lancamentos = repositorioLancamento.buscarTodos();
+        List<LancamentoBonus> lista = new ArrayList<>(Collections.emptyList());
+        for (int i = 0; i < lancamentos.length; i++) {
+            if (lancamentos[i].getDataHoraLancamento().toLocalDate().isAfter(d1) || lancamentos[i].getDataHoraLancamento().toLocalDate().isEqual(d1)) {
+                if(lancamentos[i].getDataHoraLancamento().toLocalDate().isBefore(d2) || lancamentos[i].getDataHoraLancamento().toLocalDate().isEqual(d2)) {
+                    lista.add(lancamentos[i]);
+                }
+            }
+        }
+        Collections.sort(lista, ComparadorLancamentoBonusDHDec.getInstance());
+        LancamentoBonus[] lancamentosOrdenados = new LancamentoBonus[lista.size()];
+        for (int i = 0; i < lista.size(); i++) {
+            lancamentosOrdenados[i] = lista.get(i);
+        }
+        return lancamentosOrdenados;
     }
 }

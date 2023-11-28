@@ -4,6 +4,7 @@ import br.gov.cesarschool.poo.bonusvendas.dao.VendedorDAO;
 import br.gov.cesarschool.poo.bonusvendas.entidade.Vendedor;
 import br.gov.cesarschool.poo.bonusvendas.negocio.geral.StringUtil;
 import br.gov.cesarschool.poo.bonusvendas.negocio.geral.ValidadorCPF;
+import br.gov.cesarschool.poo.bonusvendas.util.Ordenadora;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -104,6 +105,18 @@ public class VendedorMediator {
     private boolean dataNascimentoInvalida(LocalDate dataNasc) {
         long yearsDifference = ChronoUnit.YEARS.between(dataNasc, LocalDate.now());
         return yearsDifference < 17;
+    }
+
+    public Vendedor[] gerarListagemClienteOrdenadaPorNome() {
+        Vendedor[] vendedores = repositorioVendedor.buscarTodos();
+        Ordenadora.ordenar(vendedores, ComparadorVendedorNome.getInstance());
+        return vendedores;
+    }
+
+    public Vendedor[] gerarListagemClienteOrdenadaPorRenda() {
+        Vendedor[] vendedores = repositorioVendedor.buscarTodos();
+        Ordenadora.ordenar(vendedores, ComparadorVendedorRenda.getInstance());
+        return vendedores;
     }
 
 
